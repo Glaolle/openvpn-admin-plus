@@ -5,12 +5,12 @@
 # SERVER_NAME=server
 # EASY_RSA=/etc/openvpn/easy-rsa
 
-VARS=/etc/openvpn/easy-rsa/vars
+VARS=/etc/openvpn/server/easy-rsa/vars
 # PiVPN stores its keys under easy-rsa/pki
 # mkdir -p /etc/openvpn/keys
 # touch /etc/openvpn/keys/index.txt
 # echo 01 > /etc/openvpn/keys/serial
-cp -f /opt/scripts/vars.template /etc/openvpn/easy-rsa/vars
+cp -f /opt/openvpn-admin-plus/scripts/vars.template /etc/openvpn/server/easy-rsa/vars
 
 # Append the env variables passed by Docker to the vars file
 echo -e "\n"                                       >> $VARS
@@ -23,7 +23,7 @@ echo "set_var EASYRSA_REQ_OU        \"$OU\""       >> $VARS
 
 # Append name=server to the end of the first line of index.txt
 
-sed -i ' 1 s/.*/&\/name=server/' /etc/openvpn/easy-rsa/pki/index.txt
+sed -i ' 1 s/.*/&\/name=server/' /etc/openvpn/server/easy-rsa/pki/index.txt
 
 # Determine commonname for server and add to environment
 

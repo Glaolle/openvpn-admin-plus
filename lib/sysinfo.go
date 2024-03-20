@@ -4,11 +4,12 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"runtime"
+//	"runtime"
 	"time"
 
 	"github.com/astaxie/beego"
 	sigar "github.com/cloudfoundry/gosigar"
+	"github.com/zcalusic/sysinfo"
 )
 
 //SystemInfo contains basic information about system load
@@ -33,6 +34,9 @@ type SystemInfo struct {
 
 //GetSystemInfo returns short info about system load
 func GetSystemInfo() SystemInfo {
+	var si sysinfo.SysInfo
+	si.GetSysInfo()
+
 	s := SystemInfo{}
 
 	uptime := sigar.Uptime{}
@@ -63,8 +67,10 @@ func GetSystemInfo() SystemInfo {
 		s.CPUList = cpulist
 	}
 
-	s.Arch = runtime.GOARCH
-	s.Os = runtime.GOOS
+//	s.Arch = runtime.GOARCH
+	s.Arch = si.OS.Architecture
+//	s.Os = runtime.GOOS
+	s.Os = si.OS.Name
 
 	// Array with For loop to read /proc/meminfo to replace bogus gosigar memory and swap data
 	memValues := []string{"MemTotal", "MemFree", "MemAvailable", "SwapTotal", "SwapFree"}

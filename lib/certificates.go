@@ -122,7 +122,8 @@ func CreateCertificate(name string, passphrase string) error {
 			fmt.Sprintf(
 				"%s/easyrsa --batch build-client-full %s nopass",
 				rsaPath, name))
-		cmd.Dir = models.GlobalCfg.OVConfigPath
+//		cmd.Dir = models.GlobalCfg.OVConfigPath
+		cmd.Dir = rsaPath
 		output, err := cmd.CombinedOutput()
 		if err != nil {
 			beego.Debug(string(output))
@@ -136,7 +137,8 @@ func CreateCertificate(name string, passphrase string) error {
 			fmt.Sprintf(
 				"%s/easyrsa --passout=pass:%s build-client-full %s",
 				rsaPath, passphrase, name))
-		cmd.Dir = models.GlobalCfg.OVConfigPath
+//		cmd.Dir = models.GlobalCfg.OVConfigPath
+		cmd.Dir = rsaPath
 		output, err := cmd.CombinedOutput()
 		if err != nil {
 			beego.Debug(string(output))
@@ -164,7 +166,8 @@ func RevokeCertificate(name string, serial string) error {
 						"%s/easyrsa gen-crl &&"+
 						"cp %s/pki/crl.pem %s/..",
 					rsaPath, name, rsaPath, rsaPath, rsaPath))
-			cmd.Dir = models.GlobalCfg.OVConfigPath
+//			cmd.Dir = models.GlobalCfg.OVConfigPath
+			cmd.Dir = rsaPath
 			output, err2 := cmd.CombinedOutput()
 			if err2 != nil {
 				beego.Debug(string(output))

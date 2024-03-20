@@ -149,7 +149,7 @@
       <div class="form-group">
         <label for="name">Extra Server Options</label>
         <textarea type="text" class="form-control" name="ExtraServerOptions" 
-          id="ExtraServerOptions">{{ .Settings.ExtraServerOptions }}</textarea>
+          id="ExtraServerOptions" rows="4">{{ .Settings.ExtraServerOptions }}</textarea>
         <span id="helpBlock" class="help-block">Extra server options to add to the config. 
           # indicates option will not be used. push block-outside DNS and push redirect-gateway
           should not be used in a bridge setup.
@@ -159,7 +159,7 @@
       <div class="form-group">
         <label for="name">Extra Client Options</label>
         <textarea type="text" class="form-control" name="ExtraClientOptions" 
-          id="ExtraClientOptions">{{ .Settings.ExtraClientOptions }}</textarea>
+          id="ExtraClientOptions" rows="4">{{ .Settings.ExtraClientOptions }}</textarea>
         <span id="helpBlock" class="help-block">Extra client options to add to the generated client configs.
             # indicates option will not be used. Either dev tun (tunnel) or dev tap (bridge) must be enabled!
         </span>

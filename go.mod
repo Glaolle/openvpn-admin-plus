@@ -7,6 +7,7 @@ require (
 	github.com/bnhf/go-openvpn v0.0.0-20220226142348-d36953e77c71
 	github.com/cloudfoundry/gosigar v1.3.4
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
+	github.com/zcalusic/sysinfo v0.9.5
 	gopkg.in/hlandau/passlib.v1 v1.0.11
 )
 

@@ -7,7 +7,8 @@ ca {{ .Ca }}
 cert {{ .Cert }}
 key {{ .Key }}
 dh {{ .Dh }}
-ecdh-curve prime256v1
+#ecdh-curve prime256v1
+tls-groups prime256v1
 
 topology subnet
 {{ .Server }}
@@ -24,12 +25,15 @@ auth {{ .Auth }}
 
 persist-key
 persist-tun
-crl-verify /etc/openvpn/easy-rsa/pki/crl.pem
+crl-verify crl.pem
+user nobody
+group nogroup
+explicit-exit-notify 1
 
-# status /etc/openvpn/openvpn-status.log 20
-# status-version 3
+status openvpn-status.log 20
+status-version 3
 # syslog
-log /etc/openvpn/openvpn.log
+log openvpn.log
 verb 3
 mute 10
 

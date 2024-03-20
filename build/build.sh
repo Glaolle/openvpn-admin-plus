@@ -18,5 +18,7 @@ cp -f ../$PKGFILE ./
 # docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -f build/Multi-arch.dockerfile -t bnhf/openvpn-admin-plus:beta . --push --no-cache
 
 # Single-arch (amd64) development build
-docker buildx build --platform linux/amd64 -f build/Multi-arch.dockerfile -t bnhf/openvpn-admin-plus . --push --no-cache
+#docker buildx build --platform linux/amd64 -f build/Multi-arch.dockerfile -t bnhf/openvpn-admin-plus . --push --no-cache
+docker build -t openvpn-admin-plus .
+
 rm -f $PKGFILE

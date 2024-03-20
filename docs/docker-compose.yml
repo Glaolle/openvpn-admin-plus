@@ -1,7 +1,8 @@
 version: "3"
 services:
   gui:
-    image: bnhf/openvpn-admin-plus:latest
+    #image: bnhf/openvpn-admin-plus:latest
+    image: Glaolle/openvpn-admin-plus:latest
     container_name: openvpn-admin-plus
     logging:
       driver: "json-file"
@@ -29,4 +30,4 @@ services:
     restart: always
     volumes:
      - /etc/openvpn:/etc/openvpn
-     - ./openvpn-data/db:/opt/openvpn-gui-tap/db
+     - ./openvpn-data/db:/opt/openvpn-admin-plus/db

@@ -2,7 +2,7 @@
 # 	echo "Nope." >&2
 # 	return 1
 # fi
-set_var EASYRSA            "/etc/openvpn/easy-rsa"
+set_var EASYRSA            "/etc/openvpn/server/easy-rsa"
 set_var EASYRSA_PKI        "$EASYRSA/pki"
 set_var EASYRSA_CRL_DAYS   3650
 set_var EASYRSA_ALGO       ec

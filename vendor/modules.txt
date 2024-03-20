@@ -26,8 +26,6 @@ github.com/cespare/xxhash/v2
 ## explicit; go 1.18
 github.com/cloudfoundry/gosigar
 github.com/cloudfoundry/gosigar/sys/windows
-# github.com/davecgh/go-spew v1.1.1
-## explicit
 # github.com/elazarl/go-bindata-assetfs v1.0.1
 ## explicit
 # github.com/fsnotify/fsnotify v1.5.4
@@ -61,8 +59,6 @@ github.com/matttproud/golang_protobuf_extensions/pbutil
 # github.com/pkg/errors v0.9.1
 ## explicit
 github.com/pkg/errors
-# github.com/pmezard/go-difflib v1.0.0
-## explicit
 # github.com/prometheus/client_golang v1.12.2
 ## explicit; go 1.13
 github.com/prometheus/client_golang/prometheus
@@ -87,10 +83,12 @@ github.com/shiena/ansicolor
 # github.com/sirupsen/logrus v1.8.1
 ## explicit; go 1.13
 github.com/sirupsen/logrus
-# github.com/stretchr/objx v0.1.1
-## explicit
 # github.com/stretchr/testify v1.7.1
 ## explicit; go 1.13
+# github.com/zcalusic/sysinfo v0.9.5
+## explicit; go 1.17
+github.com/zcalusic/sysinfo
+github.com/zcalusic/sysinfo/cpuid
 # golang.org/x/crypto v0.0.0-20220518034528-6f7dac969898
 ## explicit; go 1.17
 golang.org/x/crypto/acme
