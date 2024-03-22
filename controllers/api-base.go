@@ -1,12 +1,14 @@
 package controllers
 
-import "github.com/astaxie/beego"
+import (
+	"github.com/beego/beego/v2/core/logs"
+)
 
 type APIBaseController struct {
 	BaseController
 }
 
-//JSONResponse http://stackoverflow.com/a/12979961
+// JSONResponse http://stackoverflow.com/a/12979961
 type JSONResponse struct {
 	Status  string `json:"status"`
 	Message string `json:"message"`
@@ -25,7 +27,8 @@ func NewJSONResponse() *JSONResponse {
 
 func (c *APIBaseController) Prepare() {
 	c.EnableXSRF = false
-	c.BaseController.Prepare()
+	//	c.BaseController.Prepare()
+	c.Controller.Prepare()
 }
 
 func (c *APIBaseController) NestPrepare() {
@@ -55,7 +58,7 @@ func (c *APIBaseController) ServeJSONError(message string) {
 		Status:  "error",
 		Message: message,
 	}
-	beego.Warning(message)
+	logs.Warning(message)
 	c.Ctx.Output.SetStatus(400)
 	c.ServeJSON()
 }

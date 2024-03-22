@@ -4,15 +4,16 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-//	"runtime"
+
+	//	"runtime"
 	"time"
 
-	"github.com/astaxie/beego"
+	"github.com/beego/beego/v2/core/logs"
 	sigar "github.com/cloudfoundry/gosigar"
 	"github.com/zcalusic/sysinfo"
 )
 
-//SystemInfo contains basic information about system load
+// SystemInfo contains basic information about system load
 type SystemInfo struct {
 	Memory      sigar.Mem
 	Swap        sigar.Swap
@@ -32,7 +33,7 @@ type SystemInfo struct {
 	SwapUsed    uint64
 }
 
-//GetSystemInfo returns short info about system load
+// GetSystemInfo returns short info about system load
 func GetSystemInfo() SystemInfo {
 	var si sysinfo.SysInfo
 	si.GetSysInfo()
@@ -67,9 +68,9 @@ func GetSystemInfo() SystemInfo {
 		s.CPUList = cpulist
 	}
 
-//	s.Arch = runtime.GOARCH
+	//	s.Arch = runtime.GOARCH
 	s.Arch = si.OS.Architecture
-//	s.Os = runtime.GOOS
+	//	s.Os = runtime.GOOS
 	s.Os = si.OS.Name
 
 	// Array with For loop to read /proc/meminfo to replace bogus gosigar memory and swap data
@@ -78,8 +79,8 @@ func GetSystemInfo() SystemInfo {
 	for _, memLabel := range memValues {
 		memInfo, err := os.Open("/proc/meminfo")
 		if err != nil {
-			beego.Debug(string("proc/meminfo not found"))
-			beego.Error(err)
+			logs.Debug(string("proc/meminfo not found"))
+			logs.Error(err)
 		}
 		defer memInfo.Close()
 		b := bufio.NewScanner(memInfo)

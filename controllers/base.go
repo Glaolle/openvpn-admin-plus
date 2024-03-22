@@ -1,8 +1,9 @@
 package controllers
 
 import (
-	"github.com/astaxie/beego"
-	"github.com/bnhf/pivpn-tap-web-ui/models"
+	"github.com/Glaolle/openvpn-admin-plus/models"
+	"github.com/beego/beego/v2/core/logs"
+	beego "github.com/beego/beego/v2/server/web"
 )
 
 type BaseController struct {
@@ -70,7 +71,11 @@ func (c *BaseController) LoginPath() string {
 
 func (c *BaseController) SetParams() {
 	c.Data["Params"] = make(map[string]string)
-	for k, v := range c.Input() {
+	xInput, err := c.Input()
+	if err != nil {
+		logs.Error(err)
+	}
+	for k, v := range xInput {
 		c.Data["Params"].(map[string]string)[k] = v[0]
 	}
 }

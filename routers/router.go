@@ -8,8 +8,8 @@
 package routers
 
 import (
-	"github.com/astaxie/beego"
-	"github.com/bnhf/pivpn-tap-web-ui/controllers"
+	"github.com/Glaolle/openvpn-admin-plus/controllers"
+	beego "github.com/beego/beego/v2/server/web"
 )
 
 func init() {

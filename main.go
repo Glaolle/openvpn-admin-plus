@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/astaxie/beego"
-	"github.com/bnhf/pivpn-tap-web-ui/lib"
-	_ "github.com/bnhf/pivpn-tap-web-ui/routers"
+	"github.com/Glaolle/openvpn-admin-plus/lib"
+	_ "github.com/Glaolle/openvpn-admin-plus/routers"
+	beego "github.com/beego/beego/v2/server/web"
 )
 
 func main() {

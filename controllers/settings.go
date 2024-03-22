@@ -3,9 +3,10 @@ package controllers
 import (
 	"html/template"
 
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
-	"github.com/bnhf/pivpn-tap-web-ui/models"
+	"github.com/Glaolle/openvpn-admin-plus/models"
+	"github.com/beego/beego/v2/client/orm"
+	"github.com/beego/beego/v2/core/logs"
+	beego "github.com/beego/beego/v2/server/web"
 )
 
 type SettingsController struct {
@@ -37,7 +38,7 @@ func (c *SettingsController) Post() {
 	settings := models.Settings{Profile: "default"}
 	settings.Read("Profile")
 	if err := c.ParseForm(&settings); err != nil {
-		beego.Warning(err)
+		logs.Warning(err)
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
 		return

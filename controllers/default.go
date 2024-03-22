@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"github.com/astaxie/beego"
-	"github.com/bnhf/pivpn-tap-web-ui/lib"
-	"github.com/bnhf/pivpn-tap-web-ui/models"
+	"github.com/Glaolle/openvpn-admin-plus/lib"
+	"github.com/Glaolle/openvpn-admin-plus/models"
+	"github.com/beego/beego/v2/core/logs"
 
 	mi "github.com/bnhf/go-openvpn/server/mi"
 )
@@ -28,7 +28,7 @@ func (c *MainController) Get() {
 	client := mi.NewClient(models.GlobalCfg.MINetwork, models.GlobalCfg.MIAddress)
 	status, err := client.GetStatus()
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		c.Data["ovstatus"] = status
 	}
@@ -36,7 +36,7 @@ func (c *MainController) Get() {
 
 	version, err := client.GetVersion()
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		c.Data["ovversion"] = version.OpenVPN
 	}
@@ -44,7 +44,7 @@ func (c *MainController) Get() {
 
 	pid, err := client.GetPid()
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		c.Data["ovpid"] = pid
 	}
@@ -52,7 +52,7 @@ func (c *MainController) Get() {
 
 	loadStats, err := client.GetLoadStats()
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		c.Data["ovstats"] = loadStats
 	}

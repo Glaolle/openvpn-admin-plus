@@ -4,13 +4,13 @@ import (
 	"html/template"
 	"os"
 
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
+	"github.com/beego/beego/v2/client/orm"
+	"github.com/beego/beego/v2/core/logs"
+	beego "github.com/beego/beego/v2/server/web"
 	"github.com/bnhf/go-openvpn/server/config"
 
-	//	mi "github.com/bnhf/go-openvpn/server/mi"
-	"github.com/bnhf/pivpn-tap-web-ui/lib"
-	"github.com/bnhf/pivpn-tap-web-ui/models"
+	"github.com/Glaolle/openvpn-admin-plus/lib"
+	"github.com/Glaolle/openvpn-admin-plus/models"
 )
 
 type OVConfigController struct {
@@ -42,7 +42,7 @@ func (c *OVConfigController) Post() {
 	cfg := models.OVConfig{Profile: "default"}
 	cfg.Read("Profile")
 	if err := c.ParseForm(&cfg); err != nil {
-		beego.Warning(err)
+		logs.Warning(err)
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
 		return
@@ -53,7 +53,7 @@ func (c *OVConfigController) Post() {
 	destPath := models.GlobalCfg.OVConfigPath + "/" + os.Getenv("PIVPN_CONF")
 	err := config.SaveToFile("conf/openvpn-server-config.tpl", cfg.Config, destPath)
 	if err != nil {
-		beego.Warning(err)
+		logs.Warning(err)
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
 		return
@@ -68,9 +68,9 @@ func (c *OVConfigController) Post() {
 		flash.Success("Config has been updated -- reboot required for changes to take effect!")
 		//		client := mi.NewClient(models.GlobalCfg.MINetwork, models.GlobalCfg.MIAddress)
 		//		if err := client.Signal("SIGTERM"); err != nil {
-		if err != nil { //Above two lines causing MI to stop responding
-			flash.Warning("Config has been updated but OpenVPN server was NOT reloaded: " + err.Error())
-		}
+		//if err != nil { //Above two lines causing MI to stop responding
+		//	flash.Warning("Config has been updated but OpenVPN server was NOT reloaded: " + err.Error())
+		//}
 	}
 	flash.Store(&c.Controller)
 }

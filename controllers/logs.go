@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/astaxie/beego"
-	"github.com/bnhf/pivpn-tap-web-ui/models"
+	"github.com/Glaolle/openvpn-admin-plus/models"
+	"github.com/beego/beego/v2/core/logs"
 )
 
 type LogsController struct {
@@ -30,21 +30,21 @@ func (c *LogsController) Get() {
 	settings.Read("Profile")
 
 	if err := settings.Read("OVConfigPath"); err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		return
 	}
 
 	fName := settings.OVConfigPath + "/openvpn.log"
 	file, err := os.Open(fName)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	var logs []string
 	for scanner.Scan() {
 		line := scanner.Text()
-		if strings.Index(line, " MANAGEMENT: ") == -1 {
+		if !strings.Contains(line, " MANAGEMENT: ") {
 			logs = append(logs, strings.Trim(line, "\t"))
 		}
 	}

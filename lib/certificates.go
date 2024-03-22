@@ -4,18 +4,17 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"strings"
 	"time"
 
-	"github.com/astaxie/beego"
-	"github.com/bnhf/pivpn-tap-web-ui/models"
+	"github.com/Glaolle/openvpn-admin-plus/models"
+	"github.com/beego/beego/v2/core/logs"
 )
 
-//Cert
-//https://groups.google.com/d/msg/mailing.openssl.users/gMRbePiuwV0/wTASgPhuPzkJ
+// Cert
+// https://groups.google.com/d/msg/mailing.openssl.users/gMRbePiuwV0/wTASgPhuPzkJ
 type Cert struct {
 	EntryType   string
 	Expiration  string
@@ -37,7 +36,7 @@ type Details struct {
 
 func ReadCerts(path string) ([]*Cert, error) {
 	certs := make([]*Cert, 0)
-	text, err := ioutil.ReadFile(path)
+	text, err := os.ReadFile(path)
 	if err != nil {
 		return certs, err
 	}
@@ -86,7 +85,7 @@ func parseDetails(d string) *Details {
 			case "emailAddress":
 				details.Email = fields[1]
 			default:
-				beego.Warn(fmt.Sprintf("Undefined entry: %s", line))
+				logs.Warn(fmt.Sprintf("Undefined entry: %s", line))
 			}
 		}
 	}
@@ -107,8 +106,8 @@ func CreateCertificate(name string, passphrase string) error {
 	}
 	certs, err := ReadCerts(rsaIndex)
 	if err != nil {
-		//		beego.Debug(string(output))
-		beego.Error(err)
+		//		logs.Debug(string(output))
+		logs.Error(err)
 		//		return err
 	}
 	Dump(certs)
@@ -123,12 +122,12 @@ func CreateCertificate(name string, passphrase string) error {
 			fmt.Sprintf(
 				"%s/easyrsa --batch build-client-full %s nopass",
 				rsaPath, name))
-//		cmd.Dir = models.GlobalCfg.OVConfigPath
+		//		cmd.Dir = models.GlobalCfg.OVConfigPath
 		cmd.Dir = rsaPath
 		output, err := cmd.CombinedOutput()
 		if err != nil {
-			beego.Debug(string(output))
-			beego.Error(err)
+			logs.Debug(string(output))
+			logs.Error(err)
 			return err
 		}
 		return nil
@@ -138,12 +137,12 @@ func CreateCertificate(name string, passphrase string) error {
 			fmt.Sprintf(
 				"%s/easyrsa --passout=pass:%s build-client-full %s",
 				rsaPath, passphrase, name))
-//		cmd.Dir = models.GlobalCfg.OVConfigPath
+		//		cmd.Dir = models.GlobalCfg.OVConfigPath
 		cmd.Dir = rsaPath
 		output, err := cmd.CombinedOutput()
 		if err != nil {
-			beego.Debug(string(output))
-			beego.Error(err)
+			logs.Debug(string(output))
+			logs.Error(err)
 			return err
 		}
 		return nil
@@ -156,7 +155,7 @@ func RevokeCertificate(name string, serial string) error {
 	rsaIndex := models.GlobalCfg.OVConfigPath + "easy-rsa/pki/index.txt"
 	certs, err := ReadCerts(rsaIndex)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	Dump(certs)
 	for _, v := range certs {
@@ -167,12 +166,12 @@ func RevokeCertificate(name string, serial string) error {
 						"%s/easyrsa gen-crl &&"+
 						"cp %s/pki/crl.pem %s/..",
 					rsaPath, name, rsaPath, rsaPath, rsaPath))
-//			cmd.Dir = models.GlobalCfg.OVConfigPath
+			//			cmd.Dir = models.GlobalCfg.OVConfigPath
 			cmd.Dir = rsaPath
 			output, err2 := cmd.CombinedOutput()
 			if err2 != nil {
-				beego.Debug(string(output))
-				beego.Error(err2)
+				logs.Debug(string(output))
+				logs.Error(err2)
 				return err2
 			}
 			return nil
@@ -185,7 +184,7 @@ func RemoveCertificate(name string, serial string) error {
 	rsaIndex := models.GlobalCfg.OVConfigPath + "easy-rsa/pki/index.txt"
 	certs, err := ReadCerts(rsaIndex)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	Dump(certs)
 	for _, v := range certs {
@@ -198,7 +197,7 @@ func RemoveCertificate(name string, serial string) error {
 			_ = os.Remove(models.GlobalCfg.OVConfigPath + "easy-rsa/pki/" + name + ".conf")
 			lines, err := readLines(rsaIndex)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 				return err
 			}
 			newrsaIndex := ""
@@ -207,9 +206,9 @@ func RemoveCertificate(name string, serial string) error {
 					newrsaIndex += line + "\n"
 				}
 			}
-			err = ioutil.WriteFile(rsaIndex, []byte(newrsaIndex), 0644)
+			err = os.WriteFile(rsaIndex, []byte(newrsaIndex), 0644)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 				return err
 			}
 			return nil

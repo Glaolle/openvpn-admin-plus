@@ -9,11 +9,12 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/validation"
+	"github.com/Glaolle/openvpn-admin-plus/lib"
+	"github.com/Glaolle/openvpn-admin-plus/models"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/core/validation"
+	beego "github.com/beego/beego/v2/server/web"
 	"github.com/bnhf/go-openvpn/client/config"
-	"github.com/bnhf/pivpn-tap-web-ui/lib"
-	"github.com/bnhf/pivpn-tap-web-ui/models"
 )
 
 type NewCertParams struct {
@@ -23,6 +24,7 @@ type NewCertParams struct {
 
 type CertificatesController struct {
 	BaseController
+	// beego.Controller
 }
 
 func (c *CertificatesController) NestPrepare() {
@@ -44,7 +46,10 @@ func (c *CertificatesController) DownloadSingleConfig() {
 	c.Ctx.Output.Header("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", filename))
 
 	keysPath := models.GlobalCfg.OVConfigPath + "easy-rsa/pki"
-	if cfgPath, err := saveClientSingleConfig(name, keysPath); err == nil {
+	if cfgPath, err := func() (string, error) {
+		var _ string = keysPath
+		return saveClientSingleConfig(name)
+	}(); err == nil {
 		c.Ctx.Output.Download(cfgPath, filename)
 	}
 
@@ -70,7 +75,7 @@ func (c *CertificatesController) Download() {
 	addFileToZip(zw, keysPath+"ta.key")
 
 	if err := zw.Close(); err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 }
 
@@ -81,7 +86,7 @@ func (c *CertificatesController) Revoke() {
 	name := c.GetString(":key")
 	serial := c.GetString(":serial")
 	if err := lib.RevokeCertificate(name, serial); err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		//flash.Error(err.Error())
 		//flash.Store(&c.Controller)
 	} else {
@@ -98,7 +103,7 @@ func (c *CertificatesController) Remove() {
 	name := c.GetString(":key")
 	serial := c.GetString(":serial")
 	if err := lib.RemoveCertificate(name, serial); err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		//flash.Error(err.Error())
 		//flash.Store(&c.Controller)
 	} else {
@@ -117,18 +122,18 @@ func addFileToZip(zw *zip.Writer, path string) error {
 	}
 	fi, err := os.Open(path)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		return err
 	}
 
 	fw, err := zw.CreateHeader(header)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		return err
 	}
 
 	if _, err = io.Copy(fw, fi); err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		return err
 	}
 
@@ -145,7 +150,7 @@ func (c *CertificatesController) showCerts() {
 	path := models.GlobalCfg.OVConfigPath + "easy-rsa/pki/index.txt"
 	certs, err := lib.ReadCerts(path)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	lib.Dump(certs)
 	c.Data["certificates"] = &certs
@@ -158,7 +163,7 @@ func (c *CertificatesController) Post() {
 
 	cParams := NewCertParams{}
 	if err := c.ParseForm(&cParams); err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
 	} else {
@@ -166,7 +171,7 @@ func (c *CertificatesController) Post() {
 			c.Data["validation"] = vMap
 		} else {
 			if err := lib.CreateCertificate(cParams.Name, cParams.Passphrase); err != nil {
-				beego.Error(err)
+				logs.Error(err)
 				flash.Error(err.Error())
 				flash.Store(&c.Controller)
 			} else {
@@ -182,7 +187,7 @@ func validateCertParams(cert NewCertParams) map[string]map[string]string {
 	valid := validation.Validation{}
 	b, err := valid.Valid(&cert)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		return nil
 	}
 	if !b {
@@ -211,14 +216,14 @@ func saveClientConfig(name string) (string, error) {
 	destPath := models.GlobalCfg.OVConfigPath + "easy-rsa/pki/" + name + ".conf"
 	if err := config.SaveToFile("conf/openvpn-client-config.tpl",
 		cfg, destPath); err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		return "", err
 	}
 
 	return destPath, nil
 }
 
-func saveClientSingleConfig(name string, pathString string) (string, error) {
+func saveClientSingleConfig(name string) (string, error) {
 	certPath := models.GlobalCfg.OVConfigPath + "easy-rsa/pki/"
 	cfg := config.New()
 	cfg.ServerAddress = models.GlobalCfg.ServerAddress
@@ -239,7 +244,7 @@ func saveClientSingleConfig(name string, pathString string) (string, error) {
 	destPath := models.GlobalCfg.OVConfigPath + "easy-rsa/pki/" + name + ".ovpn"
 	if err := config.SaveToFile("conf/openvpn-client-config.ovpn.tpl",
 		cfg, destPath); err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		return "", err
 	}
 
@@ -249,7 +254,7 @@ func saveClientSingleConfig(name string, pathString string) (string, error) {
 func readCert(path string) string {
 	buff, err := ioutil.ReadFile(path) // just pass the file name
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		return ""
 	}
 	return string(buff)
