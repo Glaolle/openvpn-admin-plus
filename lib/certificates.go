@@ -71,7 +71,8 @@ func parseDetails(d string) *Details {
 	details := &Details{}
 	lines := strings.Split(trim(string(d)), "/")
 	for _, line := range lines {
-		if strings.Contains(line, "") {
+		//if strings.Contains(line, "") {
+		if line != "" {
 			fields := strings.Split(trim(line), "=")
 			switch fields[0] {
 			case "name":
