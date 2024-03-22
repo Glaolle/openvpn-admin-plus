@@ -4,8 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-
-	//	"runtime"
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"

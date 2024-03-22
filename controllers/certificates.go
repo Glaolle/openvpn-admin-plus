@@ -4,7 +4,6 @@ import (
 	"archive/zip"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"time"
@@ -24,7 +23,6 @@ type NewCertParams struct {
 
 type CertificatesController struct {
 	BaseController
-	// beego.Controller
 }
 
 func (c *CertificatesController) NestPrepare() {
@@ -252,7 +250,7 @@ func saveClientSingleConfig(name string) (string, error) {
 }
 
 func readCert(path string) string {
-	buff, err := ioutil.ReadFile(path) // just pass the file name
+	buff, err := os.ReadFile(path) // just pass the file name
 	if err != nil {
 		logs.Error(err)
 		return ""

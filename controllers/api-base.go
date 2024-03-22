@@ -27,8 +27,7 @@ func NewJSONResponse() *JSONResponse {
 
 func (c *APIBaseController) Prepare() {
 	c.EnableXSRF = false
-	//	c.BaseController.Prepare()
-	c.Controller.Prepare()
+	c.BaseController.Prepare()
 }
 
 func (c *APIBaseController) NestPrepare() {
