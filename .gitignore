@@ -1,4 +1,4 @@
 /data.db
-/pivpn-tap-web-ui*
-/lastupdate.tmp
-pivpn-tap-web-ui.exe
+/openvpn-admin-plus
+/build-*
+/start*
